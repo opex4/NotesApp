@@ -6,10 +6,9 @@ import retrofit2.Call;
 import retrofit2.http.*;
 
 public interface ApiService {
-
-    // Регистрация пользователя
+    // Регистация пользователя
     @POST("register")
-    Call<RegStructDTO> registerUser(@Body RegStructDTO registerUser);
+    Call<JwtTokenDTO> registerUser(@Body RegStructDTO registerUser);
 
     // Логин пользователя
     @POST("login")
