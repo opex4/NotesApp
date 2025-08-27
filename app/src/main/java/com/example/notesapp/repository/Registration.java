@@ -24,6 +24,10 @@ public class Registration {
     private String message;
 
     public void pullRegisterData(RegStructDTO registerData) {
+//        if (!isRegisterDataCorrect(registerData)){
+//            return;
+//        }
+
         ApiService apiService = RetrofitClient.getApiService();
 
         Call<JwtTokenDTO> call = apiService.registerUser(registerData);
@@ -45,6 +49,15 @@ public class Registration {
         });
     }
 
+//    private boolean isRegisterDataCorrect(RegStructDTO registerData) {
+//        if (registerData != null){
+//            setMessage("Ошибка создания данных");
+//            return true;
+//        }
+//        setMessage("Неверно введены регистрационные данные");
+//        return false;
+//    }
+
     private void handleSuccessResponse(JwtTokenDTO responseData, int code) {
         if (code == 201){
             setJwtToken(responseData);
@@ -64,7 +77,6 @@ public class Registration {
 
         // Возвращаем ошибку
         setMessage(errorMessage);
-        setJwtToken(null);
     }
 
     private void handleNetworkFailure(Throwable t) {
@@ -76,6 +88,5 @@ public class Registration {
 
         // Возвращаем сетевую ошибку
         setMessage(errorMessage);
-        setJwtToken(null);
     }
 }

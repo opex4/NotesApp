@@ -8,17 +8,14 @@
     tools:context=".RegisterActivity">
 
     <Button
-        android:id="@+id/register"
+        android:id="@+id/registerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="184dp"
+        android:layout_marginStart="136dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="185dp"
-        android:layout_marginBottom="228dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="136dp"
+        android:text="@string/register_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/repeatPassword" />
 
@@ -26,10 +23,11 @@
         android:id="@+id/textRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="120dp"
-        android:layout_marginEnd="201dp"
-        android:text="TextView"
+        android:layout_marginStart="169dp"
+        android:layout_marginTop="140dp"
+        android:layout_marginEnd="169dp"
+        android:text="@string/register"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,12 +38,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="125dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="125dp"
+        android:layout_marginEnd="124dp"
         android:ems="10"
+        android:hint="@string/repeat_password"
         android:inputType="textPassword"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        tools:ignore="TextContrastCheck" />
 
     <EditText
         android:id="@+id/email"
@@ -53,9 +54,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="125dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="125dp"
+        android:layout_marginEnd="124dp"
         android:ems="10"
+        android:hint="@string/email"
         android:inputType="textEmailAddress"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username" />
@@ -66,10 +69,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="125dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="125dp"
+        android:layout_marginEnd="124dp"
         android:ems="10"
         android:gravity="start|top"
+        android:hint="@string/username"
         android:inputType="textMultiLine"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textRegister" />
@@ -80,9 +85,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="125dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="125dp"
+        android:layout_marginEnd="124dp"
         android:ems="10"
+        android:hint="@string/password"
         android:inputType="textPassword"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email" />
