@@ -12,5 +12,5 @@ public interface ApiService {
 
     // Логин пользователя
     @POST("login")
-    Call<AuthStructDTO> loginUser(@Body AuthStructDTO loginUser);
+    Call<JwtTokenDTO> loginUser(@Body AuthStructDTO loginUser);
 }

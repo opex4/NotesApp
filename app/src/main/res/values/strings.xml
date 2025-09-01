@@ -2,12 +2,23 @@
     <string name="app_name">NotesApp</string>
 
     <!-- Для регистрации пользователя -->
-    <string name="register">Регистрация</string>
-    <string name="password">Пароль</string>
-    <string name="repeat_password">Повторите пароль</string>
-    <string name="username">Имя пользователя</string>
-    <string name="email">Email</string>
-    <string name="register_btn">Зарегистрироваться</string>
+    <string name="register_reg">Регистрация</string>
+    <string name="password_reg">Пароль</string>
+    <string name="repeat_password_reg">Повторите пароль</string>
+    <string name="username_reg">Имя пользователя</string>
+    <string name="email_reg">Email</string>
+    <string name="register_btn_reg">Зарегистрироваться</string>
+    <string name="auth_btn_reg">Войти</string>
+    <string name="is_auth_reg">У вас уже есть аккаунт?</string>
+
+    <!-- Для авторизации пользователя -->
+    <string name="auth_auth">Вход</string>
+    <string name="password_auth">Пароль</string>
+    <string name="username_auth">Имя пользователя</string>
+    <string name="email_auth">Email</string>
+    <string name="auth_btn_auth">Войти</string>
+    <string name="reg_btn_auth">Зарегистрироваться</string>
+    <string name="is_reg_auth">У вас ещё нет аккаунта?</string>
 
 
 </resources>
