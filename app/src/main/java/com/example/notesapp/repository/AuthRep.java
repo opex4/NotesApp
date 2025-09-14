@@ -52,20 +52,20 @@ public class AuthRep extends Rep<JwtTokenDTO> {
         });
     }
 
-    private boolean isLogInDataCorrect(AuthStructDTO registerData) {
-        if (registerData == null) {
+    private boolean isLogInDataCorrect(AuthStructDTO authData) {
+        if (authData == null) {
             getMessageLiveData().postValue("Данные регистрации не могут быть пустыми");
             return false;
         }
 
         // Проверка имени пользователя
-        if (registerData.getUsername() == null || registerData.getUsername().isEmpty()) {
+        if (authData.getUsername() == null || authData.getUsername().isEmpty()) {
             getMessageLiveData().postValue("Имя не может быть пустым");
             return false;
         }
 
         // Проверка пароля
-        if (registerData.getPassword() == null || registerData.getPassword().isEmpty()) {
+        if (authData.getPassword() == null || authData.getPassword().isEmpty()) {
             getMessageLiveData().postValue("Пароль не может быть пустым");
             return false;
         }
