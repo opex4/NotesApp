@@ -26,7 +26,7 @@ public class AuthRep extends Rep<JwtTokenDTO> {
     }
 
     @Override
-    public void pullRegisterData() {
+    public void pullData() {
         // Проверка корректности данных
         if (!isLogInDataCorrect(logInData)){
             return;

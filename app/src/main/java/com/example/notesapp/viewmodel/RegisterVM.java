@@ -14,7 +14,7 @@ public class RegisterVM extends ViewModel {
     public void registerUser(RegStructDTO registerData) {
         this.registerRep = new RegisterRep(registerData);
         registerRep.getMessageLiveData().observeForever(messageLiveData::postValue);
-        registerRep.pullRegisterData();
+        registerRep.pullData();
     }
 
     public LiveData<String> getMessageLiveData() {

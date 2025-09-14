@@ -47,6 +47,6 @@ public abstract class Rep<T> implements ResponseHandler<T> {
     }
 
     // Абстрактные методы для реализации в дочерних классах
-    public abstract void pullRegisterData();
+    public abstract void pullData();
     public abstract void handleSuccessResponse(T responseData, int code);
 }

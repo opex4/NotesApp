@@ -24,7 +24,7 @@ public class RegisterRep extends Rep<JwtTokenDTO> {
     }
 
     @Override
-    public void pullRegisterData() {
+    public void pullData() {
         if (!isRegisterDataCorrect(registerData)){
             return;
         }

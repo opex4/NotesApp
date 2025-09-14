@@ -3,7 +3,7 @@ package com.example.notesapp.repository;
 import androidx.lifecycle.MutableLiveData;
 
 public interface ResponseHandler<T> {
-    void pullRegisterData();
+    void pullData();
     void handleSuccessResponse(T responseData, int code);
     void handleErrorResponse(int code);
     void handleNetworkFailure(Throwable t);

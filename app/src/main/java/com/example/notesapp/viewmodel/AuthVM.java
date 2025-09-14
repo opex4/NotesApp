@@ -14,7 +14,7 @@ public class AuthVM extends ViewModel {
     public void logInUser(AuthStructDTO authData) {
         this.authRep = new AuthRep(authData);
         authRep.getMessageLiveData().observeForever(messageLiveData::postValue);
-        authRep.pullRegisterData();
+        authRep.pullData();
     }
 
     public LiveData<String> getMessageLiveData() {

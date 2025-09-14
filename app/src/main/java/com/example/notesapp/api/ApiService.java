@@ -2,6 +2,8 @@ package com.example.notesapp.api;
 
 import com.example.notesapp.dto.*;
 
+import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -13,4 +15,8 @@ public interface ApiService {
     // Логин пользователя
     @POST("login")
     Call<JwtTokenDTO> loginUser(@Body AuthStructDTO loginUser);
+
+    // Получить список нотпадов
+    @GET("notepads")
+    Call<ArrayList<NotepadInfoDTO>> getNotepads(@Header("Authorization") String jwt);
 }
