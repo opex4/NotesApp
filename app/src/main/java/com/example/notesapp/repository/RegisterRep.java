@@ -26,6 +26,8 @@ public class RegisterRep extends Rep<JwtTokenDTO> {
 
     @Override
     public void pullData() {
+        checkRegisterData(registerData);
+
         ApiService apiService = RetrofitClient.getApiService();
         Call<JwtTokenDTO> call = apiService.registerUser(registerData);
 
@@ -49,7 +51,7 @@ public class RegisterRep extends Rep<JwtTokenDTO> {
     @Override
     public void handleSuccessResponse(JwtTokenDTO responseData, int code) {
         if (code == 201){
-            super.setResponseData(responseData);
+            setResponseData(responseData);
         }
     }
 

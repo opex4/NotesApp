@@ -17,7 +17,7 @@ public abstract class Rep<T> {
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     protected Rep(){
-        this.jwtToken = "";
+        this.jwtToken = null;
     }
     public Rep(String jwtToken) throws JwtExeption {
         if(isJwtCorrect(jwtToken)){

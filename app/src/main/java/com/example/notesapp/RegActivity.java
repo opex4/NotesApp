@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,25 +24,15 @@ public class RegActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_reg);
+
+        // Инициализация UI
+        initializeUI();
 
         // Инициализация ViewModel
         registerVM = new ViewModelProvider(this).get(RegisterVM.class);
         // Подписка на сообщения
-        registerVM.getRegisterRep().getErrorMessage().observe(this, message ->{
-            Toast.makeText(RegActivity.this, message, Toast.LENGTH_SHORT).show();
-        });
-        // Подписка на получение ответа с сервера
-        registerVM.getRegisterRep().getResponseData().observe(this, jwtToken ->{
-            AppStorage.getInstance().saveJwtToken(jwtToken.getToken());
-            Intent intent = new Intent(RegActivity.this, NotepadsActivity.class);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-            finish();
-        });
-
-        // Инициализация UI
-        initializeUI();
     }
 
     private void initializeUI() {
@@ -63,6 +54,17 @@ public class RegActivity extends AppCompatActivity {
                 // Регистрация
                 try{
                     registerVM.registerUser(registerData);
+                    registerVM.getRegisterRep().getErrorMessage().observe(this, message ->{
+                        Toast.makeText(RegActivity.this, message, Toast.LENGTH_SHORT).show();
+                    });
+                    // Подписка на получение ответа с сервера
+                    registerVM.getRegisterRep().getResponseData().observe(this, jwtToken ->{
+                        AppStorage.getInstance().saveJwtToken(jwtToken.getToken());
+                        Intent intent = new Intent(RegActivity.this, NotepadsActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                        finish();
+                    });
                 } catch (IncorrectRegisterDataExeption | JwtExeption e) {
                     String message = e.getMessage();
                     Toast.makeText(RegActivity.this, message, Toast.LENGTH_SHORT).show();

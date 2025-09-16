@@ -6,12 +6,12 @@ import com.example.notesapp.api.ApiService;
 import com.example.notesapp.api.RetrofitClient;
 import com.example.notesapp.dto.UserDTO;
 
-import lombok.Setter;
 import lombok.Getter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@Getter
 public class UserRep extends Rep<UserDTO> {
     public UserRep(String jwtToken){
         super(jwtToken);

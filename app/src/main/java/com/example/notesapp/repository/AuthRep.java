@@ -46,12 +46,12 @@ public class AuthRep extends Rep<JwtTokenDTO> {
     @Override
     public void handleSuccessResponse(JwtTokenDTO responseData, int code) {
         if (code == 200){
-            super.setResponseData(responseData);
+            setResponseData(responseData);
         }
     }
 
     @Override
-    public void handleErrorResponse(int code) throws HandleExeption {
+    public void handleErrorResponse(int code) {
         String errorMessage;
 
         switch (code) {
@@ -61,7 +61,7 @@ public class AuthRep extends Rep<JwtTokenDTO> {
             default:
                 errorMessage = "Ошибка сервера: " + code;
         }
-        throw new HandleExeption(errorMessage);
+        setErrorMessage(errorMessage);
     }
 
     private void checkLoginData(AuthStructDTO authData) throws IncorrectLoginDataExeption{

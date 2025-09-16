@@ -7,6 +7,7 @@ import com.example.notesapp.repository.RegisterRep;
 import com.example.notesapp.repository.exeptions.IncorrectRegisterDataExeption;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 public class RegisterVM extends ViewModel {

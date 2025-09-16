@@ -9,13 +9,11 @@ import com.example.notesapp.dto.NotepadInfoDTO;
 import java.util.ArrayList;
 
 import lombok.Getter;
-import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 @Getter
-@Setter
 public class NotepadsRep extends Rep<ArrayList<NotepadInfoDTO>>{
     public NotepadsRep(String jwtToken){
         super(jwtToken);
