@@ -19,4 +19,8 @@ public interface ApiService {
     // Получить список нотпадов
     @GET("notepads")
     Call<ArrayList<NotepadInfoDTO>> getNotepads(@Header("Authorization") String jwt);
+
+    // Получить инфу о себе
+    @GET("users/me")
+    Call<UserDTO> getUsersMe(@Header("Authorization") String jwt);
 }

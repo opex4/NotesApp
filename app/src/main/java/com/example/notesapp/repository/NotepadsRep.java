@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.example.notesapp.api.ApiService;
 import com.example.notesapp.api.RetrofitClient;
-import com.example.notesapp.dto.JwtTokenDTO;
 import com.example.notesapp.dto.NotepadInfoDTO;
 
 import java.util.ArrayList;
@@ -17,21 +16,15 @@ import retrofit2.Response;
 
 @Getter
 @Setter
-public class LoadingNotepadsRep extends Rep<ArrayList<NotepadInfoDTO>>{
+public class NotepadsRep extends AuhtoricatedRep<ArrayList<NotepadInfoDTO>>{
     private ArrayList<NotepadInfoDTO> notepads;
-    private String jwtToken;
-    public LoadingNotepadsRep(String jwtToken){
-        this.jwtToken = jwtToken;
+    public NotepadsRep(String jwtToken){
+        super(jwtToken);
     }
     @Override
     public void pullData() {
-        if (!isJwtCorrect(this.jwtToken)){
-            getMessageLiveData().postValue("Вы не авторизованы");
-            return;
-        }
-
         ApiService apiService = RetrofitClient.getApiService();
-        Call<ArrayList<NotepadInfoDTO>> call = apiService.getNotepads(jwtToken);
+        Call<ArrayList<NotepadInfoDTO>> call = apiService.getNotepads(super.getJwtToken());
 
         call.enqueue(new Callback<ArrayList<NotepadInfoDTO>>() {
             @Override
@@ -48,10 +41,6 @@ public class LoadingNotepadsRep extends Rep<ArrayList<NotepadInfoDTO>>{
                 handleNetworkFailure(t);
             }
         });
-    }
-
-    private boolean isJwtCorrect(String jwtTokenDTO) {
-        return jwtToken != null && !jwtToken.isEmpty();
     }
 
     @Override

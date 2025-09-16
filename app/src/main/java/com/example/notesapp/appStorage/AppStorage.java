@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import android.content.Context;
 import com.example.notesapp.dto.UserDTO;
 
+import java.util.Objects;
+
 public class AppStorage {
     private static AppStorage instance;
     private final SharedPreferences prefs;
@@ -75,9 +77,5 @@ public class AppStorage {
 
     public boolean isJwtTokenExists() {
         return getJwtToken() != null && !getJwtToken().isEmpty();
-    }
-
-    public static boolean isInitialized() {
-        return instance != null;
     }
 }
