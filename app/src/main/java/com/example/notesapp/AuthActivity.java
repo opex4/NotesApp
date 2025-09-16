@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.notesapp.dto.AuthStructDTO;
+import com.example.notesapp.repository.exeptions.IncorrectLoginDataExeption;
+import com.example.notesapp.repository.exeptions.JwtExeption;
 import com.example.notesapp.viewmodel.AuthVM;
 
 public class AuthActivity extends AppCompatActivity {
@@ -28,13 +30,6 @@ public class AuthActivity extends AppCompatActivity {
 
         // Инициализация UI
         initializeUI();
-
-        // Наблюдаем за сообщениями
-        authVM.getMessageLiveData().observe(this, message -> {
-            if (message != null) {
-                Toast.makeText(AuthActivity.this, message, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void initializeUI() {
@@ -44,11 +39,23 @@ public class AuthActivity extends AppCompatActivity {
         registerBtn = findViewById(R.id.regBtnAuth);
 
         authBtn.setOnClickListener(v -> {
+            // Считываем данные
             AuthStructDTO logInData = new AuthStructDTO();
             logInData.setUsername(username.getText().toString().trim());
             logInData.setPassword(password.getText().toString().trim());
 
-            authVM.logInUser(logInData);
+            // Авторизация
+            try {
+                authVM.loginUser(logInData);
+                Intent intent = new Intent(AuthActivity.this, NotepadsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                finish();
+            } catch (IncorrectLoginDataExeption | HandleExeption | ConnectionExeption |
+                     JwtExeption e){
+                String message = e.getMessage();
+                Toast.makeText(AuthActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
         });
 
         registerBtn.setOnClickListener(v -> {

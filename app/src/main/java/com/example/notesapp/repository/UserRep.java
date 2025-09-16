@@ -12,13 +12,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserRep extends AuhtoricatedRep<UserDTO> {
-    @Setter
-    @Getter
-    private UserDTO user;
-    @Setter
-    @Getter
-    private String successResponse = "Пользователь загружен";
+public class UserRep extends Rep<UserDTO> {
     public UserRep(String jwtToken){
         super(jwtToken);
     }
@@ -47,8 +41,7 @@ public class UserRep extends AuhtoricatedRep<UserDTO> {
     @Override
     public void handleSuccessResponse(UserDTO responseData, int code) {
         if (code == 200){
-            setUser(responseData);
-            getMessageLiveData().postValue(successResponse);
+            setResponseData(responseData);
         }
     }
 }

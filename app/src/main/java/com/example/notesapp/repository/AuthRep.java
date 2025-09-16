@@ -6,34 +6,25 @@ import com.example.notesapp.api.ApiService;
 import com.example.notesapp.api.RetrofitClient;
 import com.example.notesapp.dto.AuthStructDTO;
 import com.example.notesapp.dto.JwtTokenDTO;
+import com.example.notesapp.repository.exeptions.IncorrectLoginDataExeption;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@Getter
-@Setter
-@NoArgsConstructor
 public class AuthRep extends Rep<JwtTokenDTO> {
-    private JwtTokenDTO jwtToken;
-    private AuthStructDTO logInData;
+    private final AuthStructDTO loginData;
 
-    public AuthRep(AuthStructDTO authStructDTO){
-        logInData = authStructDTO;
+    public AuthRep(AuthStructDTO authStructDTO) throws IncorrectLoginDataExeption{
+        super();
+        // Проверка корректности данных
+        checkLoginData(authStructDTO);
+        loginData = authStructDTO;
     }
-
     @Override
     public void pullData() {
-        // Проверка корректности данных
-        if (!isLogInDataCorrect(logInData)){
-            return;
-        }
-
         ApiService apiService = RetrofitClient.getApiService();
-        Call<JwtTokenDTO> call = apiService.loginUser(logInData);
+        Call<JwtTokenDTO> call = apiService.loginUser(loginData);
 
         call.enqueue(new Callback<JwtTokenDTO>() {
             @Override
@@ -52,37 +43,15 @@ public class AuthRep extends Rep<JwtTokenDTO> {
         });
     }
 
-    private boolean isLogInDataCorrect(AuthStructDTO authData) {
-        if (authData == null) {
-            getMessageLiveData().postValue("Данные регистрации не могут быть пустыми");
-            return false;
-        }
-
-        // Проверка имени пользователя
-        if (authData.getUsername() == null || authData.getUsername().isEmpty()) {
-            getMessageLiveData().postValue("Имя не может быть пустым");
-            return false;
-        }
-
-        // Проверка пароля
-        if (authData.getPassword() == null || authData.getPassword().isEmpty()) {
-            getMessageLiveData().postValue("Пароль не может быть пустым");
-            return false;
-        }
-
-        return true;
-    }
-
     @Override
     public void handleSuccessResponse(JwtTokenDTO responseData, int code) {
         if (code == 200){
-            setJwtToken(responseData);
-            getMessageLiveData().postValue("Успешный вход");
+            super.setResponseData(responseData);
         }
     }
 
     @Override
-    public void handleErrorResponse(int code) {
+    public void handleErrorResponse(int code) throws HandleExeption {
         String errorMessage;
 
         switch (code) {
@@ -92,7 +61,22 @@ public class AuthRep extends Rep<JwtTokenDTO> {
             default:
                 errorMessage = "Ошибка сервера: " + code;
         }
+        throw new HandleExeption(errorMessage);
+    }
 
-        getMessageLiveData().postValue(errorMessage);
+    private void checkLoginData(AuthStructDTO authData) throws IncorrectLoginDataExeption{
+        if (authData == null) {
+            throw new IncorrectLoginDataExeption("Данные регистрации не могут быть пустыми");
+        }
+
+        // Проверка имени пользователя
+        if (authData.getUsername() == null || authData.getUsername().isEmpty()) {
+            throw new IncorrectLoginDataExeption("Имя не может быть пустым");
+        }
+
+        // Проверка пароля
+        if (authData.getPassword() == null || authData.getPassword().isEmpty()) {
+            throw new IncorrectLoginDataExeption("Пароль не может быть пустым");
+        }
     }
 }

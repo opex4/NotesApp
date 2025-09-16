@@ -1,23 +1,15 @@
 package com.example.notesapp.viewmodel;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.notesapp.dto.AuthStructDTO;
 import com.example.notesapp.repository.AuthRep;
+import com.example.notesapp.repository.exeptions.IncorrectLoginDataExeption;
 
 public class AuthVM extends ViewModel {
     private AuthRep authRep;
-    private final MutableLiveData<String> messageLiveData = new MutableLiveData<>();
-
-    public void logInUser(AuthStructDTO authData) {
+    public void loginUser(AuthStructDTO authData) throws IncorrectLoginDataExeption {
         this.authRep = new AuthRep(authData);
-        authRep.getMessageLiveData().observeForever(messageLiveData::postValue);
         authRep.pullData();
-    }
-
-    public LiveData<String> getMessageLiveData() {
-        return messageLiveData;
     }
 }

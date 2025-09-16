@@ -16,8 +16,7 @@ import retrofit2.Response;
 
 @Getter
 @Setter
-public class NotepadsRep extends AuhtoricatedRep<ArrayList<NotepadInfoDTO>>{
-    private ArrayList<NotepadInfoDTO> notepads;
+public class NotepadsRep extends Rep<ArrayList<NotepadInfoDTO>>{
     public NotepadsRep(String jwtToken){
         super(jwtToken);
     }
@@ -46,8 +45,7 @@ public class NotepadsRep extends AuhtoricatedRep<ArrayList<NotepadInfoDTO>>{
     @Override
     public void handleSuccessResponse(ArrayList<NotepadInfoDTO> responseData, int code) {
         if (code == 200){
-            setNotepads(responseData);
-            getMessageLiveData().postValue("Блокноты загружены");
+            setResponseData(responseData);
         }
     }
 }

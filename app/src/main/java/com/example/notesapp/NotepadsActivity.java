@@ -24,36 +24,17 @@ public class NotepadsActivity extends AppCompatActivity {
         // Проверка наличия хранилища
         AppStorage.initialize(this);
         notepadsVM = new ViewModelProvider(this).get(NotepadsVM.class);
-        // Проверяем наличие токена
-        if (AppStorage.getInstance().isJwtTokenExists()) {
-            jwtToken = AppStorage.getInstance().getJwtToken();
-            notepadsVM.loadUser(jwtToken);
-            notepadsVM.loadNotepads(jwtToken);
 
-            super.onCreate(savedInstanceState);
-            EdgeToEdge.enable(this);
-            setContentView(R.layout.activity_notepads);
+        jwtToken = AppStorage.getInstance().getJwtToken();
+        notepadsVM.loadUser(jwtToken);
+        notepadsVM.loadNotepads(jwtToken);
 
-            // Инициализация UI
-            initializeUI();
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+//            setContentView(R.layout.activity_notepads);
 
-            // Наблюдаем за сообщениями
-            notepadsVM.getNotepadsLiveData().observe(this, message -> {
-                if (message != null) {
-                    Toast.makeText(NotepadsActivity.this, message, Toast.LENGTH_SHORT).show();
-                }
-            });
-            notepadsVM.getUserLiveData().observe(this, message -> {
-                if (message != null) {
-                    Toast.makeText(NotepadsActivity.this, message, Toast.LENGTH_SHORT).show();
-                    if (message.equals(notepadsVM.getUserRep().getSuccessResponse())){
-                        notepadsVM.saveUserInStorage();
-                    }
-                }
-            });
-        } else {
-            goToRegisterActivity();
-        }
+        // Инициализация UI
+        initializeUI();
     }
 
     private void initializeUI() {

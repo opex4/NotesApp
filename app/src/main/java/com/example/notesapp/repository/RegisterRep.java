@@ -6,6 +6,7 @@ import com.example.notesapp.api.ApiService;
 import com.example.notesapp.api.RetrofitClient;
 import com.example.notesapp.dto.JwtTokenDTO;
 import com.example.notesapp.dto.RegStructDTO;
+import com.example.notesapp.repository.exeptions.IncorrectRegisterDataExeption;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,19 +17,15 @@ import retrofit2.Response;
 @Getter
 @Setter
 public class RegisterRep extends Rep<JwtTokenDTO> {
-    private JwtTokenDTO jwtToken;
-    private RegStructDTO registerData;
+    private final RegStructDTO registerData;
 
-    public RegisterRep(RegStructDTO regStructDTO){
+    public RegisterRep(RegStructDTO regStructDTO) throws IncorrectRegisterDataExeption {
+        super();
         registerData = regStructDTO;
     }
 
     @Override
     public void pullData() {
-        if (!isRegisterDataCorrect(registerData)){
-            return;
-        }
-
         ApiService apiService = RetrofitClient.getApiService();
         Call<JwtTokenDTO> call = apiService.registerUser(registerData);
 
@@ -49,51 +46,16 @@ public class RegisterRep extends Rep<JwtTokenDTO> {
         });
     }
 
-    private boolean isRegisterDataCorrect(RegStructDTO registerData) {
-        if (registerData == null) {
-            getMessageLiveData().postValue("Данные регистрации не могут быть пустыми");
-            return false;
-        }
-
-        if (registerData.getUsername() == null || registerData.getUsername().isEmpty()) {
-            getMessageLiveData().postValue("Имя не может быть пустым");
-            return false;
-        }
-
-        if (registerData.getEmail() == null || registerData.getEmail().isEmpty()) {
-            getMessageLiveData().postValue("Email не может быть пустым");
-            return false;
-        }
-        if (!isValidEmailFormat(registerData.getEmail())) {
-            getMessageLiveData().postValue("Неверный формат email");
-            return false;
-        }
-
-        if (registerData.getPassword() == null || registerData.getPassword().length() < 6) {
-            getMessageLiveData().postValue("Пароль должен содержать минимум 6 символов");
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean isValidEmailFormat(String email) {
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-        return email != null && email.matches(emailRegex);
-    }
-
     @Override
     public void handleSuccessResponse(JwtTokenDTO responseData, int code) {
         if (code == 201){
-            setJwtToken(responseData);
-            getMessageLiveData().postValue("Пользователь создан");
+            super.setResponseData(responseData);
         }
     }
 
     @Override
     public void handleErrorResponse(int code) {
         String errorMessage;
-
         switch (code) {
             case 401:
                 errorMessage = "Пользователь с таким email или именем уже существует";
@@ -101,7 +63,29 @@ public class RegisterRep extends Rep<JwtTokenDTO> {
             default:
                 errorMessage = "Ошибка сервера: " + code;
         }
+        setErrorMessage(errorMessage);
+    }
 
-        getMessageLiveData().postValue(errorMessage);
+    private void checkRegisterData(RegStructDTO registerData) throws IncorrectRegisterDataExeption {
+        if (registerData == null) {
+            throw new IncorrectRegisterDataExeption("Данные регистрации не могут быть пустыми");
+        }
+        if (registerData.getUsername() == null || registerData.getUsername().isEmpty()) {
+            throw new IncorrectRegisterDataExeption("Имя не может быть пустым");
+        }
+        String email = registerData.getEmail();
+        if (email == null || email.isEmpty()) {
+            throw new IncorrectRegisterDataExeption("Email не может быть пустым");
+        }
+        if (!isValidEmailFormat(email)) {
+            throw new IncorrectRegisterDataExeption("Неверный формат email");
+        }
+        if (registerData.getPassword() == null || registerData.getPassword().length() < 6) {
+            throw new IncorrectRegisterDataExeption("Пароль должен содержать минимум 6 символов");
+        }
+    }
+    private boolean isValidEmailFormat(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        return email != null && email.matches(emailRegex);
     }
 }

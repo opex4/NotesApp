@@ -9,7 +9,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.notesapp.appStorage.AppStorage;
 import com.example.notesapp.dto.RegStructDTO;
+import com.example.notesapp.repository.exeptions.IncorrectRegisterDataExeption;
+import com.example.notesapp.repository.exeptions.JwtExeption;
 import com.example.notesapp.viewmodel.RegisterVM;
 
 public class RegActivity extends AppCompatActivity {
@@ -24,16 +27,21 @@ public class RegActivity extends AppCompatActivity {
 
         // Инициализация ViewModel
         registerVM = new ViewModelProvider(this).get(RegisterVM.class);
+        // Подписка на сообщения
+        registerVM.getRegisterRep().getErrorMessage().observe(this, message ->{
+            Toast.makeText(RegActivity.this, message, Toast.LENGTH_SHORT).show();
+        });
+        // Подписка на получение ответа с сервера
+        registerVM.getRegisterRep().getResponseData().observe(this, jwtToken ->{
+            AppStorage.getInstance().saveJwtToken(jwtToken.getToken());
+            Intent intent = new Intent(RegActivity.this, NotepadsActivity.class);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            finish();
+        });
 
         // Инициализация UI
         initializeUI();
-
-        // Наблюдаем за сообщениями
-        registerVM.getMessageLiveData().observe(this, message -> {
-            if (message != null) {
-                Toast.makeText(RegActivity.this, message, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void initializeUI() {
@@ -46,12 +54,19 @@ public class RegActivity extends AppCompatActivity {
 
         registerBtn.setOnClickListener(v -> {
             if (password.getText().toString().equals(repeatPassword.getText().toString())) {
+                // Считываем данные
                 RegStructDTO registerData = new RegStructDTO();
                 registerData.setEmail(email.getText().toString().trim());
                 registerData.setUsername(username.getText().toString().trim());
                 registerData.setPassword(password.getText().toString().trim());
 
-                registerVM.registerUser(registerData);
+                // Регистрация
+                try{
+                    registerVM.registerUser(registerData);
+                } catch (IncorrectRegisterDataExeption | JwtExeption e) {
+                    String message = e.getMessage();
+                    Toast.makeText(RegActivity.this, message, Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(RegActivity.this, "Повтор пароля неверный", Toast.LENGTH_SHORT).show();
             }
