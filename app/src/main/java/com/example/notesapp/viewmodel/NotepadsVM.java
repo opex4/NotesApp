@@ -14,11 +14,6 @@ public class NotepadsVM extends ViewModel {
     private NotepadsRep notepadsRep;
     private UserRep userRep;
 
-    public NotepadsVM(String jwtToken){
-        loadNotepads(jwtToken);
-        loadUser(jwtToken);
-    }
-
     public void loadNotepads(String jwtToken) throws JwtExeption {
         this.notepadsRep = new NotepadsRep(jwtToken);
         notepadsRep.pullData();

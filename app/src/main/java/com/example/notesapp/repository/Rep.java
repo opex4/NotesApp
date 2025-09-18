@@ -15,26 +15,28 @@ public abstract class Rep<T> {
     private String jwtToken;
     private MutableLiveData<T> responseData = new MutableLiveData<>();
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    @Getter
+    private String notAuth = "Пользователь не авторизирован";
 
     protected Rep(){
         this.jwtToken = null;
     }
     public Rep(String jwtToken) throws JwtExeption {
         if(isJwtCorrect(jwtToken)){
-            this.jwtToken = jwtToken;
+            this.jwtToken = String.format("Bearer %s", jwtToken);
         } else {
             throw new JwtExeption("Not correct Jwt");
         }
     }
     private boolean isJwtCorrect(String jwtToken) {
-        return jwtToken == null || jwtToken.isEmpty();
+        return jwtToken != null && !jwtToken.isEmpty();
     }
 
     public void handleErrorResponse(int code) {
         String errorMessage;
         switch (code) {
             case 401:
-                errorMessage = "Пользователь не авторизирован";
+                errorMessage = notAuth;
                 break;
             case 403:
                 errorMessage = "Доступ запрещен";

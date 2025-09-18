@@ -28,7 +28,6 @@ public class NotepadsActivity extends AppCompatActivity {
         // Проверка наличия токена
         if (AppStorage.getInstance().isJwtTokenExists()){
             jwtToken = AppStorage.getInstance().getJwtToken();
-            Toast.makeText(NotepadsActivity.this, jwtToken, Toast.LENGTH_SHORT).show();
         } else {
             goToRegisterActivity();
             return;
@@ -39,26 +38,32 @@ public class NotepadsActivity extends AppCompatActivity {
         try {
             notepadsVM.loadUser(jwtToken);
             notepadsVM.loadNotepads(jwtToken);
+
+            // Подписка на сообщения
+            notepadsVM.getUserRep().getErrorMessage().observe(this, message ->{
+                Toast.makeText(NotepadsActivity.this, message, Toast.LENGTH_SHORT).show();
+                if (message.equals(notepadsVM.getNotepadsRep().getNotAuth())){
+                    goToRegisterActivity();
+                }
+            });
+            notepadsVM.getNotepadsRep().getErrorMessage().observe(this, message ->{
+                Toast.makeText(NotepadsActivity.this, message, Toast.LENGTH_SHORT).show();
+                if (message.equals(notepadsVM.getNotepadsRep().getNotAuth())){
+                    goToRegisterActivity();
+                }
+            });
+            // Подписка на получение ответа с сервера
+            notepadsVM.getUserRep().getResponseData().observe(this, user ->{
+                AppStorage.getInstance().saveUser(user);
+            });
+            notepadsVM.getNotepadsRep().getResponseData().observe(this, notepads ->{
+                // Инициализация UI
+                initializeUI(notepads);
+            });
         } catch (JwtExeption e){
             String message = e.getMessage();
             Toast.makeText(NotepadsActivity.this, message, Toast.LENGTH_SHORT).show();
         }
-
-        // Подписка на сообщения
-        notepadsVM.getUserRep().getErrorMessage().observe(this, message ->{
-            Toast.makeText(NotepadsActivity.this, message, Toast.LENGTH_SHORT).show();
-        });
-        notepadsVM.getNotepadsRep().getErrorMessage().observe(this, message ->{
-            Toast.makeText(NotepadsActivity.this, message, Toast.LENGTH_SHORT).show();
-        });
-        // Подписка на получение ответа с сервера
-        notepadsVM.getUserRep().getResponseData().observe(this, user ->{
-            AppStorage.getInstance().saveUser(user);
-        });
-        notepadsVM.getNotepadsRep().getResponseData().observe(this, notepads ->{
-            // Инициализация UI
-            initializeUI(notepads);
-        });
     }
 
     private void initializeUI(ArrayList<NotepadInfoDTO> notepads) {
@@ -66,7 +71,7 @@ public class NotepadsActivity extends AppCompatActivity {
     }
 
     private void goToRegisterActivity() {
-        Intent intent = new Intent(NotepadsActivity.this, RegActivity.class);
+        Intent intent = new Intent(NotepadsActivity.this, AuthActivity.class);
         startActivity(intent);
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         finish();
