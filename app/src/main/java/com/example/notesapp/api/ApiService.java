@@ -20,6 +20,10 @@ public interface ApiService {
     @GET("notepads")
     Call<ArrayList<NotepadInfoDTO>> getNotepads(@Header("Authorization") String jwt);
 
+    // Создать новый нотпад
+    @POST("notepads")
+    Call<NotepadInfoDTO> postNotepad(@Header("Authorization") String jwt, @Body NameDTO newNotepad);
+
     // Получить инфу о себе
     @GET("users/me")
     Call<UserDTO> getUsersMe(@Header("Authorization") String jwt);

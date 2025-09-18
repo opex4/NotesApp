@@ -20,5 +20,7 @@
     <string name="reg_btn_auth">Зарегистрироваться</string>
     <string name="is_reg_auth">У вас ещё нет аккаунта?</string>
 
-
+    <!-- Для главного активити в нотпадами -->
+    <string name="add_new_notepad">Добавить блокнот</string>
+    <string name="notepads">Блокноты</string>
 </resources>
