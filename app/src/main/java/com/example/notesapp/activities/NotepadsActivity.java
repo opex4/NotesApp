@@ -1,4 +1,4 @@
-package com.example.notesapp;
+package com.example.notesapp.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.notesapp.R;
 import com.example.notesapp.appStorage.AppStorage;
 import com.example.notesapp.dto.NotepadInfoDTO;
 import com.example.notesapp.repository.exeptions.JwtExeption;

@@ -1,6 +1,5 @@
-package com.example.notesapp;
+package com.example.notesapp.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -9,10 +8,8 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.example.notesapp.R;
 import com.example.notesapp.appStorage.AppStorage;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

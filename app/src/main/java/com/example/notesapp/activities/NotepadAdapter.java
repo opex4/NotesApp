@@ -1,5 +1,6 @@
-package com.example.notesapp;
+package com.example.notesapp.activities;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.notesapp.R;
 import com.example.notesapp.dto.NotepadInfoDTO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,23 +61,27 @@ public class NotepadAdapter extends RecyclerView.Adapter<NotepadAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView notepadName;
         private final TextView notepadDate;
+        private final TextView notepadAccessType;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             notepadName = itemView.findViewById(R.id.notepadName);
             notepadDate = itemView.findViewById(R.id.notepadDate);
+            notepadAccessType = itemView.findViewById(R.id.notepadAccessType);
         }
 
+
         public void bind(NotepadInfoDTO notepad) {
+            // Название блокнота
             notepadName.setText(notepad.getNotepadName());
 
             // Форматирование даты
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
-            String dateText = "Создан: " + sdf.format(notepad.getCreatedAt());
-            if (notepad.getUpdatedAt() != null) {
-                dateText += "\nОбновлен: " + sdf.format(notepad.getUpdatedAt());
-            }
+            String dateText = "Создан: " + sdf.format(notepad.getCreatedAt()) + "\nОбновлен: " + sdf.format(notepad.getUpdatedAt());
             notepadDate.setText(dateText);
+
+            // accessType
+            notepadAccessType.setText("Доступ: " + notepad.getAccessType());
         }
     }
 }
