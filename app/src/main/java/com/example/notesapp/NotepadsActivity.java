@@ -1,5 +1,6 @@
 package com.example.notesapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -27,13 +28,20 @@ public class NotepadsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private NotepadAdapter adapter;
     private String message;
-    private FloatingActionButton addNewNotepadBtn;
+    private FloatingActionButton addNewNotepadBtn, myUserBtn;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_notepads);
+
+        // Кнопка пользователя
+        myUserBtn = findViewById(R.id.myUserBtn);
+        myUserBtn.setOnClickListener(v -> {
+            goToUserActivity();
+        });
 
         // Добавление нотпада
         addNewNotepadBtn = findViewById(R.id.addNewNotepadButton);
@@ -56,7 +64,7 @@ public class NotepadsActivity extends AppCompatActivity {
         // Инициализация адаптера
         adapter = new NotepadAdapter(notepad -> {
             // Обработка клика по блокноту
-            openNotepadDetails(notepad);
+            goToNotesActivity(notepad);
         });
         recyclerView.setAdapter(adapter);
 
@@ -107,7 +115,14 @@ public class NotepadsActivity extends AppCompatActivity {
         }
     }
 
-    private void openNotepadDetails(NotepadInfoDTO notepad) {
+    private void goToUserActivity() {
+        Intent intent = new Intent(NotepadsActivity.this, UserActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        finish();
+    }
+
+    private void goToNotesActivity(NotepadInfoDTO notepad) {
 //        // Переход к заметкам
 //        Intent intent = new Intent(this, NotesActivity.class);
 //        intent.putExtra("NOTEPAD_ID", notepad.getNotepadId());

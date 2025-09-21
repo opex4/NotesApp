@@ -20,8 +20,16 @@
     <string name="reg_btn_auth">Зарегистрироваться</string>
     <string name="is_reg_auth">У вас ещё нет аккаунта?</string>
 
-    <!-- Для главного активити в нотпадами -->
+    <!-- Для главного активити с нотпадами -->
     <string name="add_new_notepad">Добавить блокнот</string>
     <string name="notepads">Блокноты</string>
-    <string name="myUser">Пользователь</string>
+    <string name="my_user">Пользователь</string>
+
+    <!-- Для активити c юзером -->
+    <string name="username_user">Имя пользователя:</string>
+    <string name="email_user">Почта:</string>
+    <string name="username_user2">Ваше имя</string>
+    <string name="email_user2">Ваша почта</string>
+    <string name="logout_btn_user">Выход</string>
+    <string name="return_btn_user">Назад</string>
 </resources>
