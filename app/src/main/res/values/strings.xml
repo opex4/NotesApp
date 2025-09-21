@@ -21,9 +21,9 @@
     <string name="is_reg_auth">У вас ещё нет аккаунта?</string>
 
     <!-- Для главного активити с нотпадами -->
-    <string name="add_new_notepad">Добавить блокнот</string>
+    <string name="add_new_notepad_btn">Добавить блокнот</string>
     <string name="notepads">Блокноты</string>
-    <string name="my_user">Пользователь</string>
+    <string name="my_user_btn">Пользователь</string>
 
     <!-- Для активити c юзером -->
     <string name="username_user">Имя пользователя:</string>
@@ -32,4 +32,11 @@
     <string name="email_user2">Ваша почта</string>
     <string name="logout_btn_user">Выход</string>
     <string name="return_btn_user">Назад</string>
+
+    <!-- Для активити с заметками -->
+    <string name="delete_notepad_btn_notes">Удалить блокнот</string>
+    <string name="add_note_btn_notes">Добавить заметку</string>
+    <string name="add_person_access_btn_notes">Добавить редактора</string>
+    <string name="accesses_notes">Редакторы</string>
+    <string name="notes_notes">Заметки</string>
 </resources>

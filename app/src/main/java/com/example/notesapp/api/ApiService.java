@@ -22,9 +22,26 @@ public interface ApiService {
 
     // Создать новый нотпад
     @POST("notepads")
-    Call<NotepadInfoDTO> postNotepad(@Header("Authorization") String jwt, @Body NameDTO newNotepad);
+    Call<NotepadInfoDTO> postNotepad(
+            @Header("Authorization") String jwt,
+            @Body NameDTO newNotepad
+    );
+
+    // Удалить нотпад
+    @DELETE("notepads/{id}")
+    Call<Void> deleteNotepad(
+            @Header("Authorization") String jwt,
+            @Path("id") int id
+    );
 
     // Получить инфу о себе
     @GET("users/me")
     Call<UserDTO> getUsersMe(@Header("Authorization") String jwt);
+
+    // Получить инфу о блокноте
+    @GET("notepads/{id}")
+    Call<NotepadInfoDTO> getNotepad(
+            @Header("Authorization") String jwt,
+            @Path("id") int id
+    );
 }

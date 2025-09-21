@@ -18,13 +18,13 @@
             android:layout_marginStart="16dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
-            android:contentDescription="@string/add_new_notepad"
+            android:contentDescription="@string/add_new_notepad_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@android:drawable/ic_input_add" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/recyclerViewNotepads"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="64dp"
@@ -57,7 +57,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
-            android:contentDescription="@string/my_user"
+            android:contentDescription="@string/my_user_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_person" />

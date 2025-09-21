@@ -59,14 +59,12 @@ public class NotepadsActivity extends AppCompatActivity {
         }
 
         // Инициализация RecyclerView
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerViewNotepads);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Инициализация адаптера
-        adapter = new NotepadAdapter(notepad -> {
-            // Обработка клика по блокноту
-            goToNotesActivity(notepad);
-        });
+        // Обработка клика по блокноту
+        adapter = new NotepadAdapter(this::goToNotesActivity);
         recyclerView.setAdapter(adapter);
 
         // Инициализация ViewModel и загрузка данных
@@ -124,14 +122,12 @@ public class NotepadsActivity extends AppCompatActivity {
     }
 
     private void goToNotesActivity(NotepadInfoDTO notepad) {
-//        // Переход к заметкам
-//        Intent intent = new Intent(this, NotesActivity.class);
-//        intent.putExtra("NOTEPAD_ID", notepad.getNotepadId());
-//        intent.putExtra("NOTEPAD_NAME", notepad.getNotepadName());
-//        startActivity(intent);
-
-        // Toast заглушка для теста
-        Toast.makeText(this, "Открыть блокнот: " + notepad.getNotepadName(), Toast.LENGTH_SHORT).show();
+        // Переход к заметкам
+        Intent intent = new Intent(this, NotesActivity.class);
+        intent.putExtra("NOTEPAD_ID", notepad.getNotepadId());
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        finish();
     }
 
     private void goToRegisterActivity() {

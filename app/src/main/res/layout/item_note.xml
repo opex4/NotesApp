@@ -7,21 +7,21 @@
     android:background="?attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/notepadName"
+        android:id="@+id/noteName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/notepadAccessType"
+        android:id="@+id/noteAccessType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:layout_marginTop="4dp" />
 
     <TextView
-        android:id="@+id/notepadDate"
+        android:id="@+id/noteDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
