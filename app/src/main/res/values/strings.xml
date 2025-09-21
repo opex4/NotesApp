@@ -23,4 +23,5 @@
     <!-- Для главного активити в нотпадами -->
     <string name="add_new_notepad">Добавить блокнот</string>
     <string name="notepads">Блокноты</string>
+    <string name="myUser">Пользователь</string>
 </resources>

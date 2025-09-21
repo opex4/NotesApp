@@ -3,7 +3,6 @@ package com.example.notesapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -103,8 +102,7 @@ public class NotepadsActivity extends AppCompatActivity {
                 }
             });
         } catch (JwtExeption e){
-            String message = e.getMessage();
-            Toast.makeText(NotepadsActivity.this, message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(NotepadsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             goToRegisterActivity();
         }
     }
@@ -155,8 +153,22 @@ public class NotepadsActivity extends AppCompatActivity {
     }
 
     private void createNewNotepad(String name) {
-        // Создание нотпада
-        notepadsVM.createNotepad(jwtToken, name);
-        notepadsVM.loadNotepads(jwtToken);
+        try {
+            notepadsVM.createNotepad(jwtToken, name);
+            // Подписка на успешное создание блокнота
+            notepadsVM.getNewNotepadRep().getResponseData().observe(this, newNotepad -> {
+                if (newNotepad != null) {
+                    // После создания перезагружаем список
+                    try {
+                        notepadsVM.loadNotepads(jwtToken);
+                    } catch (JwtExeption e) {
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } catch (JwtExeption e) {
+            Toast.makeText(NotepadsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            goToRegisterActivity();
+        }
     }
 }
