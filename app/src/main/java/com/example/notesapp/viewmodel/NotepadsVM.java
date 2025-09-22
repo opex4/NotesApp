@@ -17,7 +17,6 @@ public class NotepadsVM extends ViewModel {
     private NotepadsRep notepadsRep;
     private UserRep userRep;
     private NewNotepadRep newNotepadRep;
-    private MutableLiveData<NotepadInfoDTO> newNotepadLiveData = new MutableLiveData<>();
 
     public void loadNotepads(String jwtToken) throws JwtExeption {
         if(notepadsRep == null){

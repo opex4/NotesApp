@@ -36,11 +36,11 @@ public interface ApiService {
 
     // Получить инфу о себе
     @GET("users/me")
-    Call<UserDTO> getUsersMe(@Header("Authorization") String jwt);
+    Call<UserDTO> loadUsersMe(@Header("Authorization") String jwt);
 
     // Получить инфу о блокноте
     @GET("notepads/{id}")
-    Call<NotepadInfoDTO> getNotepad(
+    Call<NotepadInfoDTO> loadNotepad(
             @Header("Authorization") String jwt,
             @Path("id") int id
     );
