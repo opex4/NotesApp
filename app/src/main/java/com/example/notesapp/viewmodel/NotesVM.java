@@ -4,6 +4,10 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.notesapp.repository.DeleteNotepadRep;
 import com.example.notesapp.repository.LoadNotepadRep;
+import com.example.notesapp.repository.NoteRep;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 
@@ -11,6 +15,7 @@ import lombok.Getter;
 public class NotesVM extends ViewModel {
     private DeleteNotepadRep deleteNotepadRep;
     private LoadNotepadRep loadNotepadRep;
+    private ArrayList<NoteRep> notesRep;
 
     public void deleteNotepad(String jwtToken, int id){
         if(deleteNotepadRep == null){
@@ -28,5 +33,12 @@ public class NotesVM extends ViewModel {
             loadNotepadRep.setId(id);
         }
         loadNotepadRep.pullData();
+    }
+
+    public void loadNotes(String jwtToken, List<Integer> ids){
+        notesRep = new ArrayList<>(ids.size());
+        ids.forEach(id -> {
+            notesRep.add(new NoteRep(jwtToken, id));
+        });
     }
 }

@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.notesapp.api.ApiService;
 import com.example.notesapp.api.RetrofitClient;
-import com.example.notesapp.dto.NotepadInfoDTO;
+import com.example.notesapp.dto.TextNoteDTO;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,21 +13,23 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @Getter
-public class LoadNotepadRep extends Rep<NotepadInfoDTO>{
+public class NoteRep extends Rep<TextNoteDTO> {
     @Setter
     private int id;
-    public LoadNotepadRep(String jwtToken, int id){
+
+    public NoteRep(String jwtToken, int id){
         super(jwtToken);
         this.id = id;
     }
+
     @Override
     public void pullData() {
         ApiService apiService = RetrofitClient.getApiService();
-        Call<NotepadInfoDTO> call = apiService.loadNotepad(super.getJwtToken(), id);
+        Call<TextNoteDTO> call = apiService.loadTextNote(super.getJwtToken(), id);
 
-        call.enqueue(new Callback<NotepadInfoDTO>() {
+        call.enqueue(new Callback<TextNoteDTO>() {
             @Override
-            public void onResponse(@NonNull Call<NotepadInfoDTO> call, @NonNull Response<NotepadInfoDTO> response) {
+            public void onResponse(@NonNull Call<TextNoteDTO> call, @NonNull Response<TextNoteDTO> response) {
                 if (response.isSuccessful()) {
                     handleSuccessResponse(response.body(), response.code());
                 } else {
@@ -36,14 +38,14 @@ public class LoadNotepadRep extends Rep<NotepadInfoDTO>{
             }
 
             @Override
-            public void onFailure(@NonNull Call<NotepadInfoDTO> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<TextNoteDTO> call, @NonNull Throwable t) {
                 handleNetworkFailure(t);
             }
         });
     }
 
     @Override
-    public void handleSuccessResponse(NotepadInfoDTO responseData, int code) {
+    public void handleSuccessResponse(TextNoteDTO responseData, int code) {
         if(code == 200){
             setResponseData(responseData);
         }
@@ -60,7 +62,7 @@ public class LoadNotepadRep extends Rep<NotepadInfoDTO>{
                 errorMessage = "Недостаточно прав";
                 break;
             case 404:
-                errorMessage = "Блокнот не найден";
+                errorMessage = "Такой заметки нет";
                 break;
             default:
                 errorMessage = "Ошибка сервера: " + code;

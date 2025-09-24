@@ -80,7 +80,7 @@ public class NotepadsActivity extends AppCompatActivity {
                 }
                 this.message = message;
                 Toast.makeText(NotepadsActivity.this, message, Toast.LENGTH_SHORT).show();
-                if (message.equals(notepadsVM.getNotepadsRep().getNotAuth())){
+                if (message.equals(notepadsVM.getUserRep().getNotAuth())){
                     goToRegisterActivity();
                 }
             });

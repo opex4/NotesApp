@@ -45,7 +45,7 @@ public class DeleteNotepadRep extends Rep<Void>{
 
     @Override
     public void handleSuccessResponse(Void responseData, int code) {
-        if(code == 201){ // todo уточнить код через постман
+        if(code == 200){
             successMessage.postValue("Блокнот удалён");
         }
     }
@@ -58,10 +58,10 @@ public class DeleteNotepadRep extends Rep<Void>{
                 errorMessage = getNotAuth();
                 break;
             case 403:
-                errorMessage = "Доступ запрещен"; // todo не загрузился постман, добавить описание кодов
+                errorMessage = "Недостаточно прав";
                 break;
             case 404:
-                errorMessage = "Ресурс не найден";
+                errorMessage = "Блокнот не найден";
                 break;
             default:
                 errorMessage = "Ошибка сервера: " + code;

@@ -44,4 +44,11 @@ public interface ApiService {
             @Header("Authorization") String jwt,
             @Path("id") int id
     );
+
+    // Загрузить заметку
+    @GET("notes/{id}")
+    Call<TextNoteDTO> loadTextNote(
+            @Header("Authorization") String jwt,
+            @Path("id") int id
+    );
 }
