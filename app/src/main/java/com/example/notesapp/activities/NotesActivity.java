@@ -6,6 +6,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.notesapp.R;
 import com.example.notesapp.appStorage.AppStorage;
+import com.example.notesapp.dto.NotepadInfoDTO;
 import com.example.notesapp.dto.TextNoteDTO;
 import com.example.notesapp.repository.exeptions.JwtExeption;
 import com.example.notesapp.viewmodel.NotesVM;
@@ -74,6 +76,11 @@ public class NotesActivity extends AppCompatActivity {
             notesVM.getLoadNotepadRep().getResponseData().observe(this, notepad -> {
                 // Отображение зазвания блокнотов
                 notes.setText(notepad.getNotepadName());
+                // Удалить блокнот
+                deleteNotepadBtn.setOnClickListener(v -> {
+                    deleteNotepad();
+                });
+
                 // Загрузка заметок
                 notesVM.loadNotes(jwtToken, notepad.getNote_ids());
                 // Подписка на получение заметок
@@ -130,5 +137,31 @@ public class NotesActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         finish();
+    }
+
+    private void deleteNotepad() {
+        // Диалог подтверждения
+        new AlertDialog.Builder(this)
+                .setTitle("Подтверждение удаления")
+                .setMessage("Вы действительно хотите удалить блокнот?")
+                .setPositiveButton("Удалить", (dialog, which) -> {
+                    // Действие при подтверждении
+                    performNotepadDeletion();
+                })
+                .setNegativeButton("Отмена", (dialog, which) -> {
+                    // Закрыть диалог, ничего не делать
+                    dialog.dismiss();
+                })
+                .setCancelable(true)
+                .create()
+                .show();
+    }
+
+    private void performNotepadDeletion() {
+        notesVM.deleteNotepad(jwtToken, id);
+        notesVM.getDeleteNotepadRep().getSuccessMessage().observe(this, successMessage -> {
+            Toast.makeText(NotesActivity.this, successMessage, Toast.LENGTH_SHORT).show();
+            goToNotepadsActivity();
+        });
     }
 }

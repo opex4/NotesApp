@@ -18,7 +18,6 @@ import lombok.Getter;
 public class NotesVM extends ViewModel {
     private DeleteNotepadRep deleteNotepadRep;
     private LoadNotepadRep loadNotepadRep;
-    private ArrayList<TextNoteRep> textNotesRep;
     private ArrayList<TextNoteDTO> textNotes;
     private MutableLiveData<Boolean> isNotesLoaded = new MutableLiveData<>();
 
@@ -46,14 +45,14 @@ public class NotesVM extends ViewModel {
         if(amountNotes == 0){
             return;
         }
-        textNotesRep = new ArrayList<>(amountNotes);
+        ArrayList<TextNoteRep> textNotesRep = new ArrayList<>(amountNotes);
         ids.forEach(id -> {
             textNotesRep.add(new TextNoteRep(jwtToken, id));
             textNotesRep.get(textNotesRep.size() - 1).pullData();
         });
         // Подписка на загрузку последней записки
         textNotesRep.get(amountNotes - 1).getResponseData().observeForever(lastTextNote -> {
-            if(isAllNotesLoaded()){
+            if(isAllNotesLoaded(textNotesRep)){
                 textNotes = new ArrayList<>(textNotesRep.size());
                 textNotesRep.forEach(textNoteRep -> {
                     textNotes.add(textNoteRep.getResponseData().getValue());
@@ -66,8 +65,8 @@ public class NotesVM extends ViewModel {
         });
     }
 
-    private boolean isAllNotesLoaded(){
-        for (var textNoteRep: textNotesRep){
+    private boolean isAllNotesLoaded(ArrayList<TextNoteRep> textNotesRep){
+        for (TextNoteRep textNoteRep: textNotesRep){
             if(textNoteRep.getResponseData().getValue() == null){
                 return false;
             }
