@@ -73,15 +73,15 @@ public class NotepadAdapter extends RecyclerView.Adapter<NotepadAdapter.ViewHold
 
         public void bind(NotepadInfoDTO notepad) {
             // Название блокнота
-            notepadName.setText(notepad.getNotepadName());
+            notepadName.setText("Название: " + notepad.getNotepadName());
+
+            // accessType
+            notepadAccessType.setText("Доступ: " + notepad.getAccessType());
 
             // Форматирование даты
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
             String dateText = "Создан: " + sdf.format(notepad.getCreatedAt()) + "\nОбновлен: " + sdf.format(notepad.getUpdatedAt());
             notepadDate.setText(dateText);
-
-            // accessType
-            notepadAccessType.setText("Доступ: " + notepad.getAccessType());
         }
     }
 }
