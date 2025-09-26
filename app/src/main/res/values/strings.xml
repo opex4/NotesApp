@@ -40,4 +40,13 @@
     <string name="accesses_notes">Редакторы</string>
     <string name="notes_notes">Заметки</string>
     <string name="return_btn_notes">Назад</string>
+
+    <!-- Для активити с заметой -->
+    <string name="delete_note_btn_note">Удалить заметку</string>
+    <string name="return_btn_note">Назад</string>
+    <string name="add_person_access_btn_note">Добавить редактора</string>
+    <string name="save_btn_note">Сохранить заметку</string>
+    <string name="name_note">Название заметки</string>
+    <string name="accesses_note">Редакторы</string>
+    <string name="input_text_note">Введите текст заметки…</string>
 </resources>
