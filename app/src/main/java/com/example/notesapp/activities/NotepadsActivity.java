@@ -1,6 +1,5 @@
 package com.example.notesapp.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -31,7 +30,6 @@ public class NotepadsActivity extends AppCompatActivity {
     private String message;
     private FloatingActionButton addNewNotepadBtn, myUserBtn;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

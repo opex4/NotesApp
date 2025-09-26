@@ -13,11 +13,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @Getter
-public class NoteRep extends Rep<TextNoteDTO> {
+public class TextNoteRep extends Rep<TextNoteDTO> {
     @Setter
     private int id;
 
-    public NoteRep(String jwtToken, int id){
+    public TextNoteRep(String jwtToken, int id){
         super(jwtToken);
         this.id = id;
     }

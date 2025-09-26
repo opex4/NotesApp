@@ -39,4 +39,5 @@
     <string name="add_person_access_btn_notes">Добавить редактора</string>
     <string name="accesses_notes">Редакторы</string>
     <string name="notes_notes">Заметки</string>
+    <string name="return_btn_notes">Назад</string>
 </resources>

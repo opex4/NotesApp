@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="157dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="157dp"
         android:text="@string/accesses_notes"
         android:textSize="24sp"
@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/accesses_notes"
         tools:ignore="SpeakableTextPresentCheck"
-        tools:listitem="@layout/activity_notepads" />
+        tools:listitem="@layout/item_access" />
 
     <TextView
         android:id="@+id/notes_notes"
@@ -61,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@+id/notes_notes"
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="SpeakableTextPresentCheck"
-        tools:listitem="@layout/activity_notepads" />
+        tools:listitem="@layout/item_note" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addNoteBtnNotes"
@@ -98,4 +98,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/addNoteBtnNotes"
         app:srcCompat="@drawable/person_add" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/returnBtnNotes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        android:clickable="true"
+        android:contentDescription="@string/return_btn_notes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_revert" />
 </androidx.constraintlayout.widget.ConstraintLayout>

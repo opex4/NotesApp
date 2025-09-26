@@ -2,27 +2,30 @@ package com.example.notesapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.notesapp.R;
 import com.example.notesapp.appStorage.AppStorage;
+import com.example.notesapp.dto.TextNoteDTO;
 import com.example.notesapp.repository.exeptions.JwtExeption;
-import com.example.notesapp.viewmodel.NotepadsVM;
 import com.example.notesapp.viewmodel.NotesVM;
-
-import java.util.Objects;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class NotesActivity extends AppCompatActivity {
     private NotesVM notesVM;
     private String jwtToken;
     private int id;
+    private TextView notes;
+    private FloatingActionButton deleteNotepadBtn, addNoteBtn, addAccessPersonBtn, returnBtn;
+    private RecyclerView recyclerViewAccess, recyclerViewNotes;
+    private NoteAdapter noteAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,18 @@ public class NotesActivity extends AppCompatActivity {
 
         // Получение данных из Intent
         Intent intent = getIntent();
-        id = Integer.parseInt(Objects.requireNonNull(intent.getStringExtra("NOTEPAD_ID")));
+        if (intent.hasExtra("NOTEPAD_ID")) {
+            id = intent.getIntExtra("NOTEPAD_ID", -1); // -1 значение по умолчанию
+            if (id == -1) {
+                Toast.makeText(this, "Ошибка: ID не найден", Toast.LENGTH_LONG).show();
+                goToNotepadsActivity();
+                return;
+            }
+        } else {
+            Toast.makeText(this, "Ошибка: ID не передан", Toast.LENGTH_LONG).show();
+            goToNotepadsActivity();
+            return;
+        }
 
         // Проверка наличия токена
         if (AppStorage.getInstance().isJwtTokenExists()){
@@ -41,6 +55,9 @@ public class NotesActivity extends AppCompatActivity {
             goToRegisterActivity();
             return;
         }
+
+        // Инициализация UI
+        initializeUI();
 
         // Инициализация ViewModel и загрузка данных
         notesVM = new ViewModelProvider(this).get(NotesVM.class);
@@ -55,15 +72,61 @@ public class NotesActivity extends AppCompatActivity {
             });
             // Подписка на получение ответа
             notesVM.getLoadNotepadRep().getResponseData().observe(this, notepad -> {
-
+                // Отображение зазвания блокнотов
+                notes.setText(notepad.getNotepadName());
+                // Загрузка заметок
+                notesVM.loadNotes(jwtToken, notepad.getNote_ids());
+                // Подписка на получение заметок
+                notesVM.getIsNotesLoaded().observe(this, isLoaded -> {
+                    if(isLoaded){
+                        noteAdapter.setNotes(notesVM.getTextNotes());
+                    }
+                });
             });
         } catch (JwtExeption e) {
             Toast.makeText(NotesActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            goToRegisterActivity();
         }
+
+        // Вернуться к списку блокнотов
+        returnBtn.setOnClickListener(v -> {
+            goToNotepadsActivity();
+        });
+    }
+
+    private void initializeUI() {
+        notes = findViewById(R.id.notes_notes);
+        deleteNotepadBtn = findViewById(R.id.deleteNotepadBtnNotes);
+        addNoteBtn = findViewById(R.id.addNoteBtnNotes);
+        addAccessPersonBtn = findViewById(R.id.addAccessPersonBtnNotes);
+        returnBtn = findViewById(R.id.returnBtnNotes);
+
+        recyclerViewAccess = findViewById(R.id.recyclerViewAccessNotepad);
+
+        recyclerViewNotes = findViewById(R.id.recyclerViewNotes);
+        recyclerViewNotes.setLayoutManager(new LinearLayoutManager(this));
+        noteAdapter = new NoteAdapter(this::goToNoteDetailActivity);
+        recyclerViewNotes.setAdapter(noteAdapter);
+    }
+
+    private void goToNoteDetailActivity(TextNoteDTO textNote) {
+//        // Переход к деталям заметки
+//        Intent intent = new Intent(this, NoteDetailActivity.class);
+//        intent.putExtra("NOTE_ID", textNote.getId());
+//        startActivity(intent);
+
+        // Заглушка  на обработку события
+        Toast.makeText(NotesActivity.this, "Переход на заметку успешен", Toast.LENGTH_SHORT).show();
     }
 
     private void goToRegisterActivity() {
         Intent intent = new Intent(NotesActivity.this, AuthActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        finish();
+    }
+    private void goToNotepadsActivity() {
+        Intent intent = new Intent(NotesActivity.this, NotepadsActivity.class);
         startActivity(intent);
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         finish();
