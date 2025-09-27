@@ -11,7 +11,7 @@ import com.example.notesapp.repository.TextNoteRep;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.Getter;
 
@@ -43,40 +43,49 @@ public class NotesVM extends ViewModel {
         loadNotepadRep.pullData();
     }
 
-    // todo беды с установлением момента полной загрузки заметок
-    public void loadNotes(String jwtToken, List<Integer> ids){
+    public void loadNotes(String jwtToken, List<Integer> ids) {
         isNotesLoaded.postValue(false);
         int amountNotes = ids.size();
-        if(amountNotes == 0){
+
+        if (amountNotes == 0) {
+            textNotes = new ArrayList<>();
+            isNotesLoaded.postValue(true); // Загрузка завершена
             return;
         }
+
         ArrayList<TextNoteRep> textNotesRep = new ArrayList<>(amountNotes);
+        AtomicInteger loadedCount = new AtomicInteger(0); // Счетчик загруженных заметок
+
         ids.forEach(id -> {
-            textNotesRep.add(new TextNoteRep(jwtToken, id));
-            textNotesRep.get(textNotesRep.size() - 1).pullData();
-        });
-        // Подписка на загрузку последней записки
-        textNotesRep.get(amountNotes - 1).getResponseData().observeForever(lastTextNote -> {
-            if(isAllNotesLoaded(textNotesRep)){
-                textNotes = new ArrayList<>(textNotesRep.size());
-                textNotesRep.forEach(textNoteRep -> {
-                    textNotes.add(textNoteRep.getResponseData().getValue());
-                });
-                textNotes = textNotes.stream()
-                        .filter(note -> note.getType().contains("Text"))
-                        .collect(Collectors.toCollection(ArrayList::new));
-                isNotesLoaded.postValue(true);
-            }
+            TextNoteRep noteRep = new TextNoteRep(jwtToken, id);
+            textNotesRep.add(noteRep);
+
+            noteRep.getResponseData().observeForever(note -> {
+                if (note != null) {
+                    int currentLoaded = loadedCount.incrementAndGet();
+
+                    // Когда все заметки загружены
+                    if (currentLoaded == amountNotes) {
+                        processLoadedNotes(textNotesRep);
+                    }
+                }
+            });
+            noteRep.pullData();
         });
     }
 
-    private boolean isAllNotesLoaded(ArrayList<TextNoteRep> textNotesRep){
-        for (TextNoteRep textNoteRep: textNotesRep){
-            if(textNoteRep.getResponseData().getValue() == null){
-                return false;
+    private void processLoadedNotes(ArrayList<TextNoteRep> textNotesRep) {
+        ArrayList<TextNoteDTO> newTextNotes = new ArrayList<>();
+
+        for (TextNoteRep noteRep : textNotesRep) {
+            TextNoteDTO note = noteRep.getResponseData().getValue();
+            if (note != null && "Text".equals(note.getType())) {
+                newTextNotes.add(note);
             }
         }
-        return true;
+
+        this.textNotes = newTextNotes;
+        isNotesLoaded.postValue(true);
     }
 
     public void createTextNote(String jwtToken, String name){
