@@ -1,30 +1,36 @@
 package com.example.notesapp.repository;
 
-import com.example.notesapp.api.ApiService;
-import com.example.notesapp.api.RetrofitClient;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.notesapp.api.ApiService;
+import com.example.notesapp.api.RetrofitClient;
+import com.example.notesapp.dto.TextNoteDTO;
+
 import lombok.Getter;
-import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 @Getter
-public class DeleteNotepadRep extends Rep<Void>{
-    @Setter
+public class CreateTextNoteRep extends Rep<Void>{
+    private TextNoteDTO textNoteDTO;
     private int notepadId;
     private MutableLiveData<String> successMessage = new MutableLiveData<>();
-    public DeleteNotepadRep(String jwtToken, int notepadId){
+
+    public CreateTextNoteRep(String jwtToken, String name, int notepadId){
         super(jwtToken);
+        textNoteDTO = new TextNoteDTO();
+        textNoteDTO.setName(name);
+        textNoteDTO.setType("Text");
+        textNoteDTO.setText("");
         this.notepadId = notepadId;
     }
+
     @Override
     public void pullData() {
         ApiService apiService = RetrofitClient.getApiService();
-        Call<Void> call = apiService.deleteNotepad(super.getJwtToken(), notepadId);
+        Call<Void> call = apiService.createNote(super.getJwtToken(), notepadId, textNoteDTO);
 
         call.enqueue(new Callback<Void>() {
             @Override
@@ -45,8 +51,8 @@ public class DeleteNotepadRep extends Rep<Void>{
 
     @Override
     public void handleSuccessResponse(Void responseData, int code) {
-        if(code == 200){
-            successMessage.postValue("Блокнот удалён");
+        if(code == 201){
+            successMessage.postValue("Записка создана");
         }
     }
 
@@ -62,6 +68,9 @@ public class DeleteNotepadRep extends Rep<Void>{
                 break;
             case 404:
                 errorMessage = "Блокнот не найден";
+                break;
+            case 409:
+                errorMessage = "В этом блокноте уже существует заметка с таким названием";
                 break;
             default:
                 errorMessage = "Ошибка сервера: " + code;

@@ -1,30 +1,26 @@
 package com.example.notesapp.repository;
 
-import com.example.notesapp.api.ApiService;
-import com.example.notesapp.api.RetrofitClient;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.example.notesapp.api.ApiService;
+import com.example.notesapp.api.RetrofitClient;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@Getter
-public class DeleteNotepadRep extends Rep<Void>{
-    @Setter
-    private int notepadId;
+public class DeleteTextNoteRep extends Rep<Void>{
+    private int noteId;
     private MutableLiveData<String> successMessage = new MutableLiveData<>();
-    public DeleteNotepadRep(String jwtToken, int notepadId){
+    public DeleteTextNoteRep(String jwtToken, int noteId){
         super(jwtToken);
-        this.notepadId = notepadId;
+        this.noteId = noteId;
     }
     @Override
     public void pullData() {
         ApiService apiService = RetrofitClient.getApiService();
-        Call<Void> call = apiService.deleteNotepad(super.getJwtToken(), notepadId);
+        Call<Void> call = apiService.deleteNote(super.getJwtToken(), noteId);
 
         call.enqueue(new Callback<Void>() {
             @Override
@@ -46,7 +42,7 @@ public class DeleteNotepadRep extends Rep<Void>{
     @Override
     public void handleSuccessResponse(Void responseData, int code) {
         if(code == 200){
-            successMessage.postValue("Блокнот удалён");
+            successMessage.postValue("Заметка удалена");
         }
     }
 
@@ -61,7 +57,7 @@ public class DeleteNotepadRep extends Rep<Void>{
                 errorMessage = "Недостаточно прав";
                 break;
             case 404:
-                errorMessage = "Блокнот не найден";
+                errorMessage = "Такой заметки нет";
                 break;
             default:
                 errorMessage = "Ошибка сервера: " + code;

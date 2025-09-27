@@ -51,4 +51,27 @@ public interface ApiService {
             @Header("Authorization") String jwt,
             @Path("id") int id
     );
+
+    // Создать заметку
+    @POST("notepads/{id}/notes")
+    Call<Void> createNote(
+            @Header("Authorization") String jwt,
+            @Path("id") int id,
+            @Body TextNoteDTO textNoteDTO
+    );
+
+    // Удалить заметку
+    @DELETE("notes/{id}")
+    Call<Void> deleteNote(
+            @Header("Authorization") String jwt,
+            @Path("id") int id
+    );
+
+    // Изменить заметку
+    @PUT("notes/{id}")
+    Call<TextNoteDTO> putNote(
+            @Header("Authorization") String jwt,
+            @Path("id") int id,
+            @Body TextNoteDTO textNoteDTO
+    );
 }

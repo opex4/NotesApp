@@ -25,7 +25,7 @@ public class NotesVM extends ViewModel {
         if(deleteNotepadRep == null){
             deleteNotepadRep = new DeleteNotepadRep(jwtToken, id);
         } else {
-            deleteNotepadRep.setId(id);
+            deleteNotepadRep.setNotepadId(id);
         }
         deleteNotepadRep.pullData();
     }
