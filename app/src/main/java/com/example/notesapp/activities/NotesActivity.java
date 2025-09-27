@@ -2,6 +2,8 @@ package com.example.notesapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class NotesActivity extends AppCompatActivity {
     private NotesVM notesVM;
     private String jwtToken;
-    private int id;
+    private int notepadId;
     private TextView notes;
     private FloatingActionButton deleteNotepadBtn, addNoteBtn, addAccessPersonBtn, returnBtn;
     private RecyclerView recyclerViewAccess, recyclerViewNotes;
@@ -38,8 +40,8 @@ public class NotesActivity extends AppCompatActivity {
         // Получение данных из Intent
         Intent intent = getIntent();
         if (intent.hasExtra("NOTEPAD_ID")) {
-            id = intent.getIntExtra("NOTEPAD_ID", -1); // -1 значение по умолчанию
-            if (id == -1) {
+            notepadId = intent.getIntExtra("NOTEPAD_ID", -1); // -1 значение по умолчанию
+            if (notepadId == -1) {
                 Toast.makeText(this, "Ошибка: ID не найден", Toast.LENGTH_LONG).show();
                 goToNotepadsActivity();
                 return;
@@ -64,7 +66,7 @@ public class NotesActivity extends AppCompatActivity {
         // Инициализация ViewModel и загрузка данных
         notesVM = new ViewModelProvider(this).get(NotesVM.class);
         try {
-            notesVM.loadNotepad(jwtToken, id);
+            notesVM.loadNotepad(jwtToken, notepadId);
             // Подписка на сообщения
             notesVM.getLoadNotepadRep().getErrorMessage().observe(this, message ->{
                 Toast.makeText(NotesActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -76,6 +78,7 @@ public class NotesActivity extends AppCompatActivity {
             notesVM.getLoadNotepadRep().getResponseData().observe(this, notepad -> {
                 // Отображение зазвания блокнотов
                 notes.setText(notepad.getNotepadName());
+
                 // Удалить блокнот
                 deleteNotepadBtn.setOnClickListener(v -> {
                     deleteNotepad();
@@ -89,16 +92,21 @@ public class NotesActivity extends AppCompatActivity {
                         noteAdapter.setNotes(notesVM.getTextNotes());
                     }
                 });
+
+                // Создать заметку
+                addNoteBtn.setOnClickListener(v -> {
+                    addNote();
+                });
+            });
+
+            // Вернуться к списку блокнотов
+            returnBtn.setOnClickListener(v -> {
+                goToNotepadsActivity();
             });
         } catch (JwtExeption e) {
             Toast.makeText(NotesActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             goToRegisterActivity();
         }
-
-        // Вернуться к списку блокнотов
-        returnBtn.setOnClickListener(v -> {
-            goToNotepadsActivity();
-        });
     }
 
     private void initializeUI() {
@@ -118,7 +126,7 @@ public class NotesActivity extends AppCompatActivity {
 
     private void goToNoteDetailActivity(TextNoteDTO textNote) {
 //        // Переход к деталям заметки
-//        Intent intent = new Intent(this, NoteDetailActivity.class);
+//        Intent intent = new Intent(this, NoteActivity.class);
 //        intent.putExtra("NOTE_ID", textNote.getId());
 //        startActivity(intent);
 
@@ -158,10 +166,59 @@ public class NotesActivity extends AppCompatActivity {
     }
 
     private void performNotepadDeletion() {
-        notesVM.deleteNotepad(jwtToken, id);
+        notesVM.deleteNotepad(jwtToken, notepadId);
         notesVM.getDeleteNotepadRep().getSuccessMessage().observe(this, successMessage -> {
             Toast.makeText(NotesActivity.this, successMessage, Toast.LENGTH_SHORT).show();
             goToNotepadsActivity();
+        });
+        notesVM.getDeleteNotepadRep().getErrorMessage().observe(this, errorMessage -> {
+            Toast.makeText(NotesActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            goToNotepadsActivity();
+        });
+    }
+
+    private void addNote() {
+        // Создаем AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Создать новую заметку");
+
+        // Создаем EditText для ввода названия
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("Введите название заметки");
+        builder.setView(input);
+
+        // Кнопка создания
+        builder.setPositiveButton("Создать", (dialog, which) -> {
+            String noteName = input.getText().toString().trim();
+            if (!noteName.isEmpty()) {
+                createNewNote(noteName);
+            } else {
+                Toast.makeText(this, "Название не может быть пустым", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Кнопка отмены
+        builder.setNegativeButton("Отмена", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
+    private void createNewNote(String noteName) {
+        notesVM.createTextNote(jwtToken, noteName);
+        notesVM.getCreateTextNoteRep().getSuccessMessage().observe(this, successMessage -> {
+            Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show();
+
+            // Перезагрузка активити с анимацией
+            Intent intent = getIntent();
+            overridePendingTransition(0, 0);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
+            overridePendingTransition(0, 0);
+            startActivity(intent);
+        });
+        notesVM.getCreateTextNoteRep().getErrorMessage().observe(this, errorMessage -> {
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
         });
     }
 }

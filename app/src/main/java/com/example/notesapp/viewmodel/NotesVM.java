@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.notesapp.dto.TextNoteDTO;
+import com.example.notesapp.repository.CreateTextNoteRep;
 import com.example.notesapp.repository.DeleteNotepadRep;
 import com.example.notesapp.repository.LoadNotepadRep;
 import com.example.notesapp.repository.TextNoteRep;
@@ -18,8 +19,11 @@ import lombok.Getter;
 public class NotesVM extends ViewModel {
     private DeleteNotepadRep deleteNotepadRep;
     private LoadNotepadRep loadNotepadRep;
+
     private ArrayList<TextNoteDTO> textNotes;
     private MutableLiveData<Boolean> isNotesLoaded = new MutableLiveData<>();
+
+    private CreateTextNoteRep createTextNoteRep;
 
     public void deleteNotepad(String jwtToken, int id){
         if(deleteNotepadRep == null){
@@ -39,6 +43,7 @@ public class NotesVM extends ViewModel {
         loadNotepadRep.pullData();
     }
 
+    // todo беды с установлением момента полной загрузки заметок
     public void loadNotes(String jwtToken, List<Integer> ids){
         isNotesLoaded.postValue(false);
         int amountNotes = ids.size();
@@ -72,5 +77,10 @@ public class NotesVM extends ViewModel {
             }
         }
         return true;
+    }
+
+    public void createTextNote(String jwtToken, String name){
+        createTextNoteRep = new CreateTextNoteRep(jwtToken, name, loadNotepadRep.getId());
+        createTextNoteRep.pullData();
     }
 }
