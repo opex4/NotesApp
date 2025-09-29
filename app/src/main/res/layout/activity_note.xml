@@ -73,6 +73,7 @@
             android:id="@+id/editTextNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="@string/input_text_note"
             android:background="@android:color/transparent"
             android:gravity="top|start"
             android:hint="@string/input_text_note"

@@ -125,13 +125,13 @@ public class NotesActivity extends AppCompatActivity {
     }
 
     private void goToNoteDetailActivity(TextNoteDTO textNote) {
-//        // Переход к деталям заметки
-//        Intent intent = new Intent(this, NoteActivity.class);
-//        intent.putExtra("NOTE_ID", textNote.getId());
-//        startActivity(intent);
-
-        // Заглушка  на обработку события
-        Toast.makeText(NotesActivity.this, "Переход на заметку успешен", Toast.LENGTH_SHORT).show();
+        // Переход к деталям заметки
+        Intent intent = new Intent(this, NoteActivity.class);
+        intent.putExtra("NOTEPAD_ID", notepadId);
+        intent.putExtra("NOTE_ID", textNote.getId());
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        startActivity(intent);
+        finish();
     }
 
     private void goToRegisterActivity() {

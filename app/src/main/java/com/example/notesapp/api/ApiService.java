@@ -74,4 +74,18 @@ public interface ApiService {
             @Path("id") int id,
             @Body TextNoteDTO textNoteDTO
     );
+
+    // Заблокировать изменение заметки для редактирования
+    @POST("notes/{id}/lock")
+    Call<Void> lockNote(
+            @Header("Authorization") String jwt,
+            @Path("id") int id
+    );
+
+    // Разблокировать изменение заметки
+    @POST("notes/{id}/unlock")
+    Call<Void> unlockNote(
+            @Header("Authorization") String jwt,
+            @Path("id") int id
+    );
 }

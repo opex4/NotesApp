@@ -5,27 +5,29 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.notesapp.api.ApiService;
 import com.example.notesapp.api.RetrofitClient;
-import com.example.notesapp.dto.TextNoteDTO;
 
+import lombok.Getter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PutTextNoteRep extends Rep<TextNoteDTO>{
+@Getter
+public class LockNoteRep extends Rep<Void>{
     private int noteId;
-    private TextNoteDTO textNoteDTO;
-    public PutTextNoteRep(String jwtToken, TextNoteDTO textNote){
+    private MutableLiveData<String> successMessage = new MutableLiveData<>();
+
+    public LockNoteRep(String jwtToken, int noteId){
         super(jwtToken);
-        this.textNoteDTO = textNote;
+        this.noteId = noteId;
     }
     @Override
     public void pullData() {
         ApiService apiService = RetrofitClient.getApiService();
-        Call<TextNoteDTO> call = apiService.putNote(super.getJwtToken(), textNoteDTO.getId(), textNoteDTO);
+        Call<Void> call = apiService.lockNote(super.getJwtToken(), noteId);
 
-        call.enqueue(new Callback<TextNoteDTO>() {
+        call.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(@NonNull Call<TextNoteDTO> call, @NonNull Response<TextNoteDTO> response) {
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {
                     handleSuccessResponse(response.body(), response.code());
                 } else {
@@ -34,16 +36,16 @@ public class PutTextNoteRep extends Rep<TextNoteDTO>{
             }
 
             @Override
-            public void onFailure(@NonNull Call<TextNoteDTO> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 handleNetworkFailure(t);
             }
         });
     }
 
     @Override
-    public void handleSuccessResponse(TextNoteDTO responseData, int code) {
+    public void handleSuccessResponse(Void responseData, int code) {
         if(code == 200){
-            setResponseData(responseData);
+            successMessage.postValue("Записка заблокирована для редактирования другими пользователями");
         }
     }
 
@@ -55,13 +57,10 @@ public class PutTextNoteRep extends Rep<TextNoteDTO>{
                 errorMessage = getNotAuth();
                 break;
             case 403:
-                errorMessage = "Недостаточно прав";
+                errorMessage = "Файл уже заблокирован";
                 break;
             case 404:
-                errorMessage = "Такой заметки нет";
-                break;
-            case 409:
-                errorMessage = "В этом блокноте уже существует заметка с таким названием";
+                errorMessage = "Заметка не найдена";
                 break;
             default:
                 errorMessage = "Ошибка сервера: " + code;

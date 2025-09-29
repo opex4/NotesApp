@@ -6,10 +6,12 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.notesapp.api.ApiService;
 import com.example.notesapp.api.RetrofitClient;
 
+import lombok.Getter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@Getter
 public class DeleteTextNoteRep extends Rep<Void>{
     private int noteId;
     private MutableLiveData<String> successMessage = new MutableLiveData<>();
